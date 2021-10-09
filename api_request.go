@@ -1,4 +1,4 @@
-package discord_text_hook
+package discordtexthook
 
 import (
 	"net/http"
