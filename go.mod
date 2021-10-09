@@ -1,3 +1,3 @@
-module github.com/nahidhasan98/discord_text_hook
+module github.com/nahidhasan98/discord-text-hook
 
 go 1.17
