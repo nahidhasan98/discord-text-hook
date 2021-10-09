@@ -67,7 +67,7 @@ func handleRequestNow(message, messageID, todo string, ds discord) (*Message, er
 	return &responseData, err
 }
 
-func NewDiscordHookService(webhookID, webhookToken string) discordInterfacer {
+func NewDiscordTextHookService(webhookID, webhookToken string) discordInterfacer {
 	return &discord{
 		WebhookID:    webhookID,
 		WebhookToken: webhookToken,
