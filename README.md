@@ -1,0 +1,1 @@
+# Discord Webhook (minimal text only version)
