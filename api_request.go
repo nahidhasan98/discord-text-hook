@@ -1,8 +1,10 @@
 package discordtexthook
 
 import (
+	"bytes"
+	"encoding/json"
+	"io"
 	"net/http"
-	"strings"
 )
 
 func sendAPIRequest(message, messageID, todo string, ds discord) (*http.Response, error) {
@@ -20,14 +22,17 @@ func sendAPIRequest(message, messageID, todo string, ds discord) (*http.Response
 		apiURL = "https://discord.com/api/v9/webhooks/" + ds.WebhookID + "/" + ds.WebhookToken + "/messages/" + messageID
 	}
 
-	payload := strings.NewReader(`{
-		"content":"` + message + `"
-	}`)
+	payload := map[string]string{"content": message}
+	byteValue, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+	pload := bytes.NewBuffer(byteValue)
 
-	return executeRequest(method, apiURL, payload)
+	return executeRequest(method, apiURL, pload)
 }
 
-func executeRequest(method, apiURL string, payload *strings.Reader) (*http.Response, error) {
+func executeRequest(method, apiURL string, payload io.Reader) (*http.Response, error) {
 	req, err := http.NewRequest(method, apiURL, payload)
 	if err != nil {
 		return nil, err
