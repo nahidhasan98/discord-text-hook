@@ -39,7 +39,7 @@ func sendAPIRequest(message, messageID, todo string, ds discord, embed *Embed) (
 	}
 	pload := bytes.NewBuffer(byteValue)
 
-	return executeRequest(method, apiURL, pload)git 
+	return executeRequest(method, apiURL, pload)
 }
 
 func executeRequest(method, apiURL string, payload io.Reader) (*http.Response, error) {
