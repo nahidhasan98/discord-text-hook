@@ -7,14 +7,14 @@ import (
 	"net/http"
 )
 
-func sendAPIRequest(message, messageID, todo string, ds discord) (*http.Response, error) {
+func sendAPIRequest(message, messageID, todo string, ds discord, embed *Embed) (*http.Response, error) {
 	var method, apiURL string
 
 	switch todo {
-	case "send":
+	case "send", "send_embed":
 		method = "POST"
 		apiURL = "https://discord.com/api/v9/webhooks/" + ds.WebhookID + "/" + ds.WebhookToken + "?wait=true"
-	case "edit":
+	case "edit", "edit_embed":
 		method = "PATCH"
 		apiURL = "https://discord.com/api/v9/webhooks/" + ds.WebhookID + "/" + ds.WebhookToken + "/messages/" + messageID
 	case "delete":
@@ -22,14 +22,24 @@ func sendAPIRequest(message, messageID, todo string, ds discord) (*http.Response
 		apiURL = "https://discord.com/api/v9/webhooks/" + ds.WebhookID + "/" + ds.WebhookToken + "/messages/" + messageID
 	}
 
-	payload := map[string]string{"content": message}
+	var payload interface{}
+	if embed != nil {
+		payload = WebhookPayload{
+			Embeds: []Embed{*embed},
+		}
+	} else {
+		payload = WebhookPayload{
+			Content: message,
+		}
+	}
+
 	byteValue, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
 	}
 	pload := bytes.NewBuffer(byteValue)
 
-	return executeRequest(method, apiURL, pload)
+	return executeRequest(method, apiURL, pload)git 
 }
 
 func executeRequest(method, apiURL string, payload io.Reader) (*http.Response, error) {
